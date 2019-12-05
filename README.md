@@ -2,11 +2,11 @@
 
 Plot the instrument response from a StationXML file, report the sensitivity value, and estimate the flat part of the passband.
 
-The script uses Obspy, and its evalresp utilities.
+The script uses Obspy and its evalresp utilities.
 
-The response plot default to 'Velocity', and the sensitivity units are reported as 'nm/s'.  
+The response plot defaults to 'Velocity', and the sensitivity units are reported as 'nm/s'.  
 
-The flat part of the response passband is estimated by determing where the response is within  &plusm5% of 1, after normalizing the response by the sensitivity value.
+The flat part of the passband is estimated by determing where the response is within  ±5% of 1, after normalizing the response by the sensitivity value.
 
 ## Install ##
 
