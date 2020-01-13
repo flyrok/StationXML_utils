@@ -152,7 +152,7 @@ def plot_response(info):
     # legend
     pos1 = ax2.get_position()
     newax=[pos1.x0, pos1.y0,
-        pos1.width*.55,pos1.height*.35]
+        pos1.width*.58,pos1.height*.35]
     fig=ax2.get_figure()
     ax4=fig.add_axes(newax)
     ax4.patch.set_facecolor('lightgray')
@@ -165,9 +165,10 @@ def plot_response(info):
     in_units,value=convert_units(info['in_units'],info['value'])
     txt=f"ncalib: {value:16.9g} x counts = {in_units}"
     ax4.text(x=0.4, y=8,s=txt, ha="left",fontsize=10)
-    txt=f"evaluated at {info['freq']} Hz"
+    txt=f"ncalib evaluated at {info['freq']} Hz"
     ax4.text(x=0.4, y=6,s=txt, ha="left",fontsize=10)
-    txt=f"Flatband: {lowcf:0.3f} - {highcf:0.3f} Hz"
+    txt=f'Flatband $(\pm 5\%)$: {lowcf:0.3f} - {highcf:0.3f} Hz'
+#    txt+=r"$ (\pm 5 \%)$"
     ax4.text(x=.4, y=4,s=txt, ha="left",fontsize=10)
     txt=f"Nyquist: {info['sps']/2:0.2f} Hz"
     ax4.text(x=.4, y=2,s=txt, ha="left",fontsize=10)
