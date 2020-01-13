@@ -1,12 +1,18 @@
 ## StationXML_utils ##
 
-Plot the instrument response from a StationXML file, report the sensitivity value, and estimate the flat part of the passband.
+A few utilities to mess with StationXML files.  
 
-The script uses Obspy and its evalresp utilities.
-
-The response plot defaults to 'Velocity', and the sensitivity units are reported as 'nm/s'.  
-
+`staxml_respinfo: plot`  
+Plot the instrument response from a StationXML file, report the sensitivity value, and estimate the flat part of the passband.  
+The script uses Obspy and its evalresp utilities.  
+The response plot defaults to 'Velocity', and the sensitivity units are reported as 'nm/s'. 
 The flat part of the passband is estimated by determing where the response is within  ±5% of 1, after normalizing the response by the sensitivity value.
+
+`make_NRL_inv`  
+Make a StationXML file. Response info is pulled from IRIS NRL.
+
+`dataless2inv`  
+Convert a dataless seed volume to a StationXML file  
 
 ## Install ##
 
