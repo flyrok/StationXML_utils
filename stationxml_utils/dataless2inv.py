@@ -9,8 +9,10 @@ from obspy.io.xseed import Parser
 from obspy.io.xseed.core import _parse_to_inventory_object as d2inv
 from obspy.core.inventory import Inventory, Network, Station, Channel, Site
 import types
-here = Path(__file__).resolve().parent
-exec(open(here / "version.py").read())
+
+progname='dataless2inv';
+__version_info__ = ('2019','04','02','0.01')
+__version__ = '-'.join(__version_info__)
 
 
 def dataless_parser(dfiles,subset,debug=0):
