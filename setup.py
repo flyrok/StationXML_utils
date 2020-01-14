@@ -46,6 +46,7 @@ setup(
         'console_scripts': [
             'staxml_respinfo=stationxml_utils.staxml_respinfo:main',
             'make_NRL_inv=stationxml_utils.make_NRL_inv:main',
+            'dataless2inv=stationxml_utils.dataless2inv:main',
         ],
     },
     extras_require={  # Optional
