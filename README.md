@@ -7,12 +7,21 @@ Plot the instrument response from a StationXML file, report the sensitivity valu
 The script uses Obspy and its evalresp utilities.  
 The response plot defaults to 'Velocity', and the sensitivity units are reported as 'nm/s'. 
 The flat part of the passband is estimated by determing where the response is within  ±5% of 1, after normalizing the response by the sensitivity value.
+If the response isn't flat (e.g. converting a response flat in velocity to acceleration), then this function will produce, weird results.
+
+Plotting acceleration or displacement is not fully implemented, yet.
 
 `make_NRL_inv`  
 Make a StationXML file. Response info is pulled from IRIS NRL.
 
 `dataless2inv`  
-Convert a dataless seed volume to a StationXML file  
+Convert a dataless seed volume to a StationXML file--work in progress  
+
+`dump_staxml2txt`  
+Dump the info from a StationXML file to text
+
+`plot_staxml`  
+Plot a map of the stations in an StationXML file. This uses matplotlib.basemap
 
 ## Install ##
 
