@@ -48,6 +48,7 @@ setup(
             'make_NRL_inv=stationxml_utils.make_NRL_inv:main',
             'dataless2inv=stationxml_utils.dataless2inv:main',
             'plot_staxml=stationxml_utils.plot_staxml:main',
+            'staxml2others=stationxml_utils.staxml2others:main',
         ],
     },
     extras_require={  # Optional

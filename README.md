@@ -23,6 +23,9 @@ Dump the info from a StationXML file to text
 `plot_staxml`  
 Plot a map of the stations in an StationXML file. This uses matplotlib.basemap
 
+`staxml2others.py`  
+Convert StationXML file to other formats.  
+
 ## Install ##
 
 Clone source package  
@@ -40,7 +43,7 @@ Or just put the executable on your PATH and call directly
 ## Python Dependencies ##
 
 python>=3.6  (script uses f-strings)  
-obspy (https://github.com/obspy/obspy/wiki)
+obspy (https://github.com/obspy/obspy/wiki)  
 -- without this, nothing will work
 
 ## Usage ##
