@@ -36,7 +36,7 @@ def get_response(stainv):
     seedid=stainv.get_contents()['channels'][0]
     sps=stainv[0][0][0].sample_rate
     df=1/sps
-    start=1/600 # min freq
+    start=1/1000 # min freq
     stop=sps/2 # max freq
     nfreqs=int(sps/(start))+1
 
@@ -70,13 +70,14 @@ def convert_units(in_units,value):
 
 def find_flatband2(resp,sens):
     # perferred method to find flat band (for now)
-    amps=np.abs(resp)/sens #normalize amps by sensitivity
+    amps=np.abs(resp)
     deriv=np.diff(amps) # take the 1st derivate of the amplitude responce
     mean=deriv.mean() 
     std=deriv.std() 
+    print(f'Flatband mean:{mean} std:{std}')
     flat_ind=(deriv>=mean-std) & (deriv<= mean+std) # find the indexs which are within 1-sigma of the mean
     idx,=flat_ind.nonzero() # All idx where above is True
-
+    print(len(flat_ind),len(idx))
     # find the consecutive seqments 
     start_indx=idx[0]
     i=start_indx
@@ -90,6 +91,7 @@ def find_flatband2(resp,sens):
     # find the longest segment
     rng=0
     keep=-1
+    print(len(continuous_segs))
     if len(continuous_segs) > 0:
         for n,i in enumerate(continuous_segs):
             rng_cur=i[1]-i[0]
@@ -149,10 +151,19 @@ def plot_response(info):
     ax1.set_ylim(amplitude[0]*.1,minmax[1])
 
     # find low freq corner
-    #lowc,highc=find_flatband(info['resp'],info['value'])
     lowc,highc=find_flatband2(info['resp'],info['value'])
-    lowcf=info['freqs'][lowc]
-    highcf=info['freqs'][highc]
+    if not lowc and not highc:
+        lowc,highc=find_flatband(info['resp'],info['value'])
+    try:
+        lowcf=info['freqs'][lowc]
+        highcf=info['freqs'][highc]
+    except Exception as e:
+        print(f'problem with flatband\n\t{e}')
+        lowcf=0
+        highcf=0
+        pass;
+
+
     # add lines to plot
     ax1.axvline(x=lowcf,ymin=0,ymax=1)
     ax1.axvline(x=highcf,ymin=0,ymax=1)
@@ -207,7 +218,7 @@ def plot_response(info):
     ax4.text(x=0.4, y=8,s=txt, ha="left",fontsize=10)
     txt=f"ncalib evaluated at {info['freq']} Hz"
     ax4.text(x=0.4, y=6,s=txt, ha="left",fontsize=10)
-    txt=f'Flatband $(\pm 5\%)$: {lowcf:0.3f} - {highcf:0.3f} Hz'
+    txt=f'Flatband $(\pm 1\sigma)$: {lowcf:0.3f} - {highcf:0.3f} Hz'
 #    txt+=r"$ (\pm 5 \%)$"
     ax4.text(x=.4, y=4,s=txt, ha="left",fontsize=10)
     txt=f"Nyquist: {info['sps']/2:0.2f} Hz"
