@@ -68,6 +68,45 @@ def convert_units(in_units,value):
         in_units = 'nm'
     return in_units,value
 
+def find_flatband2(resp,sens):
+    # perferred method to find flat band (for now)
+    amps=np.abs(resp)/sens #normalize amps by sensitivity
+    deriv=np.diff(amps) # take the 1st derivate of the amplitude responce
+    mean=deriv.mean() 
+    std=deriv.std() 
+    flat_ind=(deriv>=mean-std) & (deriv<= mean+std) # find the indexs which are within 1-sigma of the mean
+    idx,=flat_ind.nonzero() # All idx where above is True
+
+    # find the consecutive seqments 
+    start_indx=idx[0]
+    i=start_indx
+    continuous_segs=[] # holder array for 
+    for n,j in enumerate(idx[1:]):
+        if j-i > 1: # if there's a gap > 1 in consecutive indexes, then we found a seqment
+            end_indx=i
+            continuous_segs.append([start_indx,end_indx])
+            start_indx=j
+        i=j
+    # find the longest segment
+    rng=0
+    keep=-1
+    if len(continuous_segs) > 0:
+        for n,i in enumerate(continuous_segs):
+            rng_cur=i[1]-i[0]
+            if rng_cur > rng:
+                keep=n
+                rng=rng_cur
+    else:
+        print('find_flatband failed')
+    if keep >=0:
+        low_corner=continuous_segs[keep][0]
+        high_corner=continuous_segs[keep][1]
+    else:
+        low_corner=None
+        high_corner=None
+    return low_corner,high_corner
+
+
 def find_flatband(resp,sens):
     amps=np.abs(resp)/sens
     flat_ind=(amps>=0.95) & (amps<= 1.05)
@@ -110,7 +149,8 @@ def plot_response(info):
     ax1.set_ylim(amplitude[0]*.1,minmax[1])
 
     # find low freq corner
-    lowc,highc=find_flatband(info['resp'],info['value'])
+    #lowc,highc=find_flatband(info['resp'],info['value'])
+    lowc,highc=find_flatband2(info['resp'],info['value'])
     lowcf=info['freqs'][lowc]
     highcf=info['freqs'][highc]
     # add lines to plot
