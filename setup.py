@@ -49,6 +49,7 @@ setup(
             'dataless2inv=stationxml_utils.dataless2inv:main',
             'plot_staxml=stationxml_utils.plot_staxml:main',
             'staxml2others=stationxml_utils.staxml2others:main',
+            'staxml2geojson=stationxml_utils.staxml2geojson:main',
         ],
     },
     extras_require={  # Optional

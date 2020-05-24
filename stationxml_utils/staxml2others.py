@@ -46,7 +46,7 @@ def parse_staxml(staxml,outformat):
                 elif outformat == 'csv':
                     stainfo.append({'net':net_code,'sta':sta_code,
                         'chan':code,'loc':loc,'lat':lat,'lon':lon,'elev':elev})
-                elif outformat == 'css':
+                elif outformat == 'css': 
                     if start_date:
                         ondate=int(start_date.strftime('%Y%j'))
                     elif sta_ondate:
