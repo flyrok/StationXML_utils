@@ -140,6 +140,29 @@ def write_file(stainfo,output,outformat):
             other=f"A 0.00  0.00  0.00  0.00 1  0.00{i['loc']} 1.000"
             msgs.append(f"{sta:<5s} {net:<2s}  {chan:<4s} {latd:2d} {latm:7.4f}{latv} {lond:2d} {lonm:7.4f}{lonv} {elev:6.1f}   {other}\n")
 
+    if outformat == 'cnv':
+        # velest format
+        msgs=[]
+        msgs.append("#(a4,f7.4,a1,1x,f8.4,a1,1x,i4,1x,i1,1x,i3,1x,f5.2,2x,f5.2)\n")
+        msgs.append("#\n")
+        for n,i in enumerate(stainfo):
+            chan=i['chan']
+            if 'Z' not in chan: 
+                continue
+            sta=i['sta']
+            lat=i['lat']
+            lon=i['lon']
+            if lat > 0:
+                latv='N'
+            else:
+                latv='S'
+            if lon > 0:
+                lonv='E'
+            else:
+                lonv='W'
+            elev=i['elev']
+            msgs.append(f"{sta:4s}{abs(lat):7.4f}{latv} {abs(lon):8.4f}{lonv} {int(elev):04d} 1 {n:03d} 00.00  00.00   1\n")
+
     if outformat == 'pick_ew':
         msgs=[]
         msgs.append("#  This is a sample station list for the pick_ew program.")
@@ -225,7 +248,7 @@ def write_file(stainfo,output,outformat):
         for i in msgs2:
             file.write(i)
         file.close()
-
+    
 
 def main():
     parser = argparse.ArgumentParser(
@@ -245,7 +268,7 @@ def main():
     output=args.outfile
     outformat=args.format
 
-    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew']
+    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew','cnv']
     format_good=0
     for i in outformats:
         if outformat == i:
