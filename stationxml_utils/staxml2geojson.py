@@ -30,13 +30,13 @@ def parse_staxml(staxml):
                 code=chan.code
                 loc=chan.location_code
                 chans.append(f'{net_code}.{sta_code}.{loc}.{code}')
-        description='\n'.join(chans)
-        features.append(Feature(geometry=Point((longitude,latitude)),properties={'description':description}))
+            description=f'\n'.join(chans)
+            features.append(Feature(geometry=Point((lon,lat)),properties={'description':description}))
     return FeatureCollection(features)
 
 def write_file(collection,output):
     with open(output, 'w') as f:
-       dump(collection, f)
+       dump(collection, f,sort_keys=True, indent=4)
     
 
 def main():
@@ -54,7 +54,7 @@ def main():
     staxml=args.staxml
     output=args.outfile
 
-    collection=parse_staxml(staxml,outformat)
+    collection=parse_staxml(staxml)
     write_file(collection,output)
 
 if __name__ == '__main__':
