@@ -52,15 +52,15 @@ def main():
     
     # Datalogger info
     ret=0
-    digi=f"REF TEK,RT 130S & 130-SMHR,1,200"
-    print(f"Input NRL Digi info (comma separated, careful with spaces)....")
-    print(f"E.g manufacturer ,model, gain, sps\n")
+    digi=f"REF TEK|RT 130S & 130-SMHR|1|200"
+    print(f"Input NRL Digi info ( | separated, careful with spaces)....")
+    print(f"E.g manufacturer| model| gain| sps\n")
     while  ret == 0 : 
         ques=f"Enter DIGI info ({digi}) :"
         digi=str(input(ques) or digi)
         print(f"\n")
         try:
-            nrl.get_datalogger_response(digi.split(','))
+            nrl.get_datalogger_response(digi.split('|'))
             ret = 1
             print("!!!!! DATA LOGGER SUCCESS!!!\n")
         except Exception as e:
@@ -70,25 +70,26 @@ def main():
     # Sensor info
     ret = 0
     sensor=f"Streckeisen,STS-1,360 seconds"
-    print(f"Input NRL Sensor info ....")
-    print(f"E.g Manufact,model,Sensitivy")
-    print(f"Guralp,CMG-40T,30s - 100Hz,800")
-    print(f"Sercel/Mark Products,L-22D,5470 Ohms,20000 Ohms")
-    print(f"Streckeisen,STS-1,360 seconds")
+    print(f"Input NRL Sensor info ....\n")
+    print(f"E.g Manufact|model|Sensitivy\n")
+    print(f"Guralp|CMG-40T,30s - 100Hz|800")
+    print(f"Sercel/Mark Products|L-22D|5470 Ohms|20000 Ohms")
+    print(f"Streckeisen|STS-1|360 seconds")
+    print(f"Nanometrics|Trillium Compact 120 (Vault, Posthole, OBS)|754 V/m/s")
     while ret == 0:
         ques=f"Enter sensor info {str(sensor)} :"
         sensor=str(input(ques) or sensor)
         try:
-            nrl.get_sensor_response(sensor.split(','))
+            nrl.get_sensor_response(sensor.split('|'))
             ret = 1
-            inst_info=f"{sensor.split(',')[0]} {sensor.split(',')[1]}"
+            inst_info=f"{sensor.split('|')[0]} {sensor.split('|')[1]}"
             print("Sensor success!!!!")
         except Exception as e:
             print(f"Try again ... {e}")
     
     print("Getting full response...")
     try:
-        response=nrl.get_response(sensor_keys=sensor.split(','),datalogger_keys=digi.split(','))
+        response=nrl.get_response(sensor_keys=sensor.split('|'),datalogger_keys=digi.split('|'))
         print("Full response success \n\n")
     except Exception as e:
         print(f"Oops .. {e}")
