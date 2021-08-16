@@ -30,7 +30,7 @@ def dataless_parser(dfiles,subset,debug=0):
         if len(invtmp._networks) > 1:
             print('More than 1 net in: ',i,len(invtmp._networks))
         else:
-            nettmp=invtmp._networks[0].select(location='01')
+            nettmp=invtmp._networks[0].select(location='0K')
         if len(inv) == 0:
             inv._networks.append(nettmp)
         else:

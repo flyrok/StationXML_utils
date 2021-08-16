@@ -241,6 +241,9 @@ def main():
     parser.add_argument("-s","--SEEDid", type=str,
         required=False, help="Seed ID to process (Net.Station.LocationCode.Chan). Leave blank to get a list of all available in StaXML file")
 
+    parser.add_argument("-r","--report", action='store_true',default=False,
+        required=False, help="No plotting just report info")
+
     parser.add_argument("-v", "--verbose", action="count",default=0,
         help="increase spewage")
 
@@ -263,8 +266,11 @@ def main():
     info['freqs'],info['resp'],info['value'],info['in_units'],info['out_units'],info['freq'],info['sps']=get_response(stainv)
     info['outpng']=f"{args.SEEDid}.response.png"
     info['SEEDid']=args.SEEDid
-    info=plot_response(info)
-    msg=f"{args.SEEDid} Sensitivity: {info['value']:16.9g} (Convert {info['out_units']} to {info['in_units']})"
+    if not args.report:
+        info=plot_response(info)
+    else:
+        in_units,value=convert_units(info['in_units'],info['value'])
+        msg=f"{args.SEEDid} Sensitivity: {value:16.9g} (Convert {info['out_units']} to {in_units})"
     print(msg)
 
 if __name__ == '__main__':
