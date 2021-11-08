@@ -278,11 +278,11 @@ def main():
         sys.exit(0)
 
     inv=read_inventory(staxml)
-    if outformat == 'kml';
+    if outformat == 'kml':
         inv.write(f"{output}.kml",format="KML")
         return
         
-    if outformat == 'css';
+    if outformat == 'css':
         inv.write(f"{output}.site",format="CSS")
         return
         
