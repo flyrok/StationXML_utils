@@ -17,7 +17,6 @@ def dec2ddmm(lon,lat):
 
 def parse_staxml(staxml,outformat):
     ### READ Inventory and return appropriate dict for format
-    inv=read_inventory(staxml)
     stainfo=[]
     stasdict={}
     for i in range(0,len(inv.networks)): # iter networks
@@ -251,6 +250,7 @@ def write_file(stainfo,output,outformat):
     
 
 def main():
+    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew','cnv']
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=
@@ -260,7 +260,7 @@ def main():
     parser.add_argument("-o","--outfile",required=True,
         help="output text file")
     parser.add_argument("-f","--format",required=True,
-        help="output format: binder|pick_fp|csv")
+        help=f"output format: {outformats}")
     parser.add_argument("-v", "--verbose", action="count",default=0,
         help="increase spewage")
     args = parser.parse_args()
@@ -277,7 +277,16 @@ def main():
         print("Output format ",outformat," not recognized. Try again")
         sys.exit(0)
 
-    stainfo=parse_staxml(staxml,outformat)
+    inv=read_inventory(staxml)
+    if outformat == 'kml';
+        inv.write(f"{output}.kml",format="KML")
+        return
+        
+    if outformat == 'css';
+        inv.write(f"{output}.site",format="CSS")
+        return
+        
+    stainfo=parse_staxml(inv,outformat)
     write_file(stainfo,output,outformat)
 
 if __name__ == '__main__':
