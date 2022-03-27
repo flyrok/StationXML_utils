@@ -50,6 +50,8 @@ setup(
             'plot_staxml=stationxml_utils.plot_staxml:main',
             'staxml2others=stationxml_utils.staxml2others:main',
             'staxml2geojson=stationxml_utils.staxml2geojson:main',
+            'update_staxml=stationxml_utils.update_staxml:main',
+            'dump_staxml2txt=stationxml_utils.dump_staxml2txt:main',
         ],
     },
     extras_require={  # Optional

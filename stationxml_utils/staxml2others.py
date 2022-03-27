@@ -15,9 +15,8 @@ def dec2ddmm(lon,lat):
     lonv = 'E' if is_positive_lon else 'W'
     return(int(lon_deg),lon_min,lonv,int(lat_deg),lat_min,latv)
 
-def parse_staxml(staxml,outformat):
+def parse_staxml(inv,outformat):
     ### READ Inventory and return appropriate dict for format
-    inv=read_inventory(staxml)
     stainfo=[]
     stasdict={}
     for i in range(0,len(inv.networks)): # iter networks
@@ -74,6 +73,7 @@ def parse_staxml(staxml,outformat):
     return stainfo
 
 def write_file(stainfo,output,outformat):
+    print('writing file')
     msgs=[]
     msgs2=[]
     if outformat == 'cvs':
@@ -98,29 +98,6 @@ def write_file(stainfo,output,outformat):
 #                GTSRCE    MMS     LATLON    37.6304      -119.0317    0     3.324
                 msgs.append(f"GTSRCE {sta:>6s}    LATLON  {lat:10.4f} {lon:14.4f}   0  {elev:9.3f}\n")
                 stalist.append(sta)
-    
-    if outformat == 'css':
-        stalist=[]
-        for i in stainfo:
-            sta=i['sta']
-            chan=i['chan']
-            lat=i['lat']
-            lon=i['lon']
-            elev=i['elev']
-            ondate=i['ondate']
-            offdate=i['offdate']
-            hang=i['hang']
-            vang=i['vang']
-            staname='none'
-            refsta=staname=ctype=descrip=statype='-' 
-            deast=dnorth=0.0000
-            edepth=-9.9999
-            chanid=-1
-            lddate=UTCDateTime.utcnow().timestamp
-            if sta not in stalist:
-                msgs.append(f"{sta:>6s} {ondate:8d} {offdate:8d} {lat:9.4f} {lon:9.4f} {elev:9.4f} {staname:>50s} {statype:>4s} {refsta:>6s} {dnorth:9.4f} {deast:9.4f} {lddate:17.5f}\n")
-                stalist.append(sta)
-            msgs2.append(f"{sta:>6s} {chan:>8s} {ondate:8d} {chanid:8d} {offdate:8d} {ctype:>4s} {edepth:9.4f} {hang:6.1f} {vang:6.1f} {descrip:>50s} {lddate:17.5f}\n")
     
     if outformat == 'binder':
         # this format is like hypoinverse
@@ -251,7 +228,7 @@ def write_file(stainfo,output,outformat):
     
 
 def main():
-    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew','cnv']
+    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew','cnv','kml']
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=
@@ -277,7 +254,16 @@ def main():
         print("Output format ",outformat," not recognized. Try again")
         sys.exit(0)
 
-    stainfo=parse_staxml(staxml,outformat)
+    inv=read_inventory(staxml)
+    if outformat == 'kml':
+        inv.write(f"{output}.kml",format="KML")
+        return
+        
+    if outformat == 'css':
+        inv.write(f"{output}",format="CSS")
+        return
+        
+    stainfo=parse_staxml(inv,outformat)
     write_file(stainfo,output,outformat)
 
 if __name__ == '__main__':
