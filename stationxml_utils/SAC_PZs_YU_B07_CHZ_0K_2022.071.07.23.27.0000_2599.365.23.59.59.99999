@@ -1,0 +1,32 @@
+* **********************************
+* NETWORK   (KNETWK): YU
+* STATION    (KSTNM): B07
+* LOCATION   (KHOLE): 0K
+* CHANNEL   (KCMPNM): CHZ
+* CREATED           : 2022-03-20T13:42:33
+* START             : 2022-03-12T07:23:27
+* END               : 2599-12-31T23:59:59
+* DESCRIPTION       : B07
+* LATITUDE          : 42.486298 
+* LONGITUDE         : -76.460876 
+* ELEVATION         : 325.7  
+* DEPTH             : 0.0  
+* DIP               : 0.0  
+* AZIMUTH           : 0.0  
+* SAMPLE RATE       : 250.0
+* INPUT UNIT        : M
+* OUTPUT UNIT       : COUNTS
+* INSTTYPE          : 65535
+* INSTGAIN          : 1.004000e+02 (M/S)
+* COMMENT           : S0/65535/6.0/65535
+* SENSITIVITY       : 3.289070e+08 (M/S)
+* A0                : 1.000000e+00
+* **********************************
+ZEROS	3
+	+0.000000e+00	+0.000000e+00
+	+0.000000e+00	+0.000000e+00
+	+0.000000e+00	+0.000000e+00
+POLES	2
+	-1.187520e+01	+2.569820e+01
+	-1.187520e+01	-2.569820e+01
+CONSTANT	+3.289070e+08
