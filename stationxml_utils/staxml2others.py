@@ -251,6 +251,7 @@ def write_file(stainfo,output,outformat):
     
 
 def main():
+    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew','cnv']
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=
@@ -260,7 +261,7 @@ def main():
     parser.add_argument("-o","--outfile",required=True,
         help="output text file")
     parser.add_argument("-f","--format",required=True,
-        help="output format: binder|pick_fp|csv")
+        help=f"output format: {outformats}")
     parser.add_argument("-v", "--verbose", action="count",default=0,
         help="increase spewage")
     args = parser.parse_args()
@@ -268,7 +269,6 @@ def main():
     output=args.outfile
     outformat=args.format
 
-    outformats=['binder', 'pick_fp', 'csv','css','nll','pick_ew','cnv']
     format_good=0
     for i in outformats:
         if outformat == i:

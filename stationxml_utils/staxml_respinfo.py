@@ -36,7 +36,7 @@ def get_response(stainv):
     seedid=stainv.get_contents()['channels'][0]
     sps=stainv[0][0][0].sample_rate
     df=1/sps
-    start=1/1000 # min freq
+    start=1/600 # min freq
     stop=sps/2 # max freq
     nfreqs=int(sps/(start))+1
 
@@ -50,6 +50,7 @@ def get_response(stainv):
     r=stainv.get_response(seedid,datet)
     resp=r.get_evalresp_response_for_frequencies(freqs,output='VEL')
     sens=r.instrument_sensitivity
+    print(f"Instrument Response Sensitivity,{r}")
     value=sens.value
     in_units=sens.input_units.lower()
     out_units=sens.output_units.lower()
@@ -60,10 +61,10 @@ def get_response(stainv):
 def convert_units(in_units,value):
     # assume in_units m/s, m and out_units COUNTS
     # so value * COUNTS = m/s 
-    if in_units == 'm/s':
+    if in_units.lower() == 'm/s':
         value=1/(value/1e9)
         in_units = 'nm/s'
-    if in_units == 'm':
+    if in_units.lower() == 'm':
         value=1/(value/1e9)
         in_units = 'nm'
     return in_units,value
@@ -244,6 +245,9 @@ def main():
     parser.add_argument("-r","--report", action='store_true',default=False,
         required=False, help="No plotting just report info")
 
+    parser.add_argument("--recalculate_sensitivity",action='store_true',default=False,
+        required=False, help="Recalculate overall sensitivity and save new staxml")
+
     parser.add_argument("-v", "--verbose", action="count",default=0,
         help="increase spewage")
 
@@ -253,6 +257,7 @@ def main():
     args = parser.parse_args()
     inv_name=args.staxml
     debug=args.verbose
+    recalc=args.recalculate_sensitivity
     inv=read_inventory(inv_name)
     if not args.SEEDid:
         print_stas(inv)
@@ -260,9 +265,22 @@ def main():
 
     net,sta,loc,chan=args.SEEDid.split(".")
     msg=f"network:{net} sta:{sta} loc:{loc} chan:{chan}"
+    print(msg)
 
-    stainv=inv.select(network=net,station=sta,location=loc,channel=chan)
     info={}
+    stainv=inv.select(network=net,station=sta,location=loc,channel=chan)
+    if recalc:
+        print("Recalculating sensitivities")
+        for net in stainv:
+            for sta in net.stations:
+                for chan in sta.channels:
+                    print(f"Response before ..............\n{chan.response}\n")
+                    chan.response.recalculate_overall_sensitivity(frequency=12.0)
+                    print(f"Response after ...............\n{chan.response}\n")
+                    chan.response.recalculate_overall_sensitivity(frequency=12.0)
+                    print(f"Response after ...............\n{chan.response}\n")
+        inv.write(f"{inv_name}.new",format="STATIONXML")
+       
     info['freqs'],info['resp'],info['value'],info['in_units'],info['out_units'],info['freq'],info['sps']=get_response(stainv)
     info['outpng']=f"{args.SEEDid}.response.png"
     info['SEEDid']=args.SEEDid
@@ -271,7 +289,7 @@ def main():
     else:
         in_units,value=convert_units(info['in_units'],info['value'])
         msg=f"{args.SEEDid} Sensitivity: {value:16.9g} (Convert {info['out_units']} to {in_units})"
-    print(msg)
+        print(msg)
 
 if __name__ == '__main__':
     main()
