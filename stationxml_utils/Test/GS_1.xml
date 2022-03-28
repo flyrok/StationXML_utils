@@ -1,0 +1,47 @@
+        <Response>
+          <InstrumentSensitivity>
+            <Value>292895643.9823423</Value>
+            <Frequency>100.0</Frequency>
+            <InputUnits>
+              <Name>M/S</Name>
+              <Description>None</Description>
+            </InputUnits>
+            <OutputUnits>
+              <Name>VOLTS</Name>
+              <Description>None</Description>
+            </OutputUnits>
+          </InstrumentSensitivity>
+          <Stage number="1">
+            <PolesZeros>
+              <InputUnits>
+                <Name>M/S</Name>
+              </InputUnits>
+              <OutputUnits>
+                <Name>VOLTS</Name>
+              </OutputUnits>
+              <PzTransferFunctionType>LAPLACE (RADIANS/SECOND)</PzTransferFunctionType>
+              <NormalizationFactor>1.0</NormalizationFactor>
+              <NormalizationFrequency unit="HERTZ">100.0</NormalizationFrequency>
+              <Zero number="0">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Zero number="1">
+                <Real>0.0</Real>
+                <Imaginary>0.0</Imaginary>
+              </Zero>
+              <Pole number="0">
+                <Real>-20.0784</Real>
+                <Imaginary>19.1693</Imaginary>
+              </Pole>
+              <Pole number="1">
+                <Real>-20.0785</Real>
+                <Imaginary>-19.1693</Imaginary>
+              </Pole>
+            </PolesZeros>
+            <StageGain>
+              <Value>292922673.6566186</Value>
+              <Frequency>100.0</Frequency>
+            </StageGain>
+          </Stage>
+        </Response>

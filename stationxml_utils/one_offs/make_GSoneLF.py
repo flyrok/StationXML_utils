@@ -9,6 +9,7 @@ First cut. Rough Script.
 from obspy.core import read, UTCDateTime
 from obspy import read_inventory
 from obspy.core.inventory import Inventory, Network, Station, Channel, Site, Equipment
+from obspy.core.inventory import Response
 from obspy.clients.nrl import NRL
 import sys,argparse
 import os.path
@@ -20,14 +21,22 @@ elev=111
 geolat=42.474228
 geolon=-76.44966
 geoelev=337.2
-scode="S15"
+scode="B02"
 date="2019,06,30"
-longname="Adam Dziewonski Obs"
+longname="YU Netwokr"
 netc="YU"
 locs=["00", "00", "00","10","10","10"]
 azims=["0.0","0.0","90.0","0.0","0.0","90.0"]
 dips=["-90.0","0.0","0.0","-90.0","0.0","0.0"]
+lsb=.3052*10**-6
+sens=89.4
 
+poles = [-20.0784 + 19.1693j, -20.0785 - 19.1693j]
+zeros = [0.0 + 0.0j, 0.0 + 0.0j]
+scal_fac=sens/lsb
+inst_info='Minimus GS-ONE LF'
+
+response=Response.from_paz(zeros, poles, scal_fac, stage_gain_frequency=100.0, input_units='M/S', output_units='VOLTS', normalization_frequency=100.0, pz_transfer_function_type='LAPLACE (RADIANS/SECOND)', normalization_factor=1.0)
 
 def main():
     chans="EHZ,EHN,EHE"
@@ -47,47 +56,6 @@ def main():
     net = Network(code=net_code,stations=[])
     print(f"\n")
     
-    # connect to NRL
-    nrl=NRL()
-    
-    # Datalogger info
-    digi=f"Generic|Unity" 
-    lsb=3.052e-7
-    ret=0
-    try:
-        nrl.get_datalogger_response(digi.split('|'))
-        ret = 1
-        print("!!!!! DATA LOGGER SUCCESS!!!\n")
-    except Exception as e:
-        print(f"Try again ... {e}")
-    
-    
-    # Sensor info
-    ret = 0
-    sensor=f"Geo Space/OYO|GS-ONE-LF|4.5 Hz|2450 and 20000 Ohms"
-    sensor=f"Geo Space/OYO|GS-ONE-LF|4.5 Hz|2450" 
-    print(f"Input NRL Sensor info ....\n")
-    print(f"Geo Space/OYO|GS-ONE-LF|4.5 Hz|2450 and 20000 Ohms")
-    while ret == 0:
-        ques=f"Enter sensor info {str(sensor)} :"
-        sensor=str(input(ques) or sensor)
-        try:
-            nrl.get_sensor_response(sensor.split('|'))
-            ret = 1
-            inst_info=f"{sensor.split('|')[0]} {sensor.split('|')[1]}"
-            print("Sensor success!!!!")
-        except Exception as e:
-            print(f"Try again ... {e}")
-    
-    print("Getting full response...")
-    try:
-        #response=nrl.get_response(sensor_keys=sensor.split('|'),datalogger_keys=digi.split('|'))
-        response=nrl.get_response(sensor_keys=sensor.split('|'),datalogger_keys=digi.split('|'))
-#        response.instrument_sensitivity.value*=lsb
-        print("Full response success \n\n")
-    except Exception as e:
-        print(f"Oops .. {e}")
-    #
     nstas=int(input("Enter number of stations to add with same sensor/digitizer (default 1):") or 1)
     for i in range(0,nstas):
         ques="Station code ("+str(scode)+") :"
@@ -127,8 +95,6 @@ def main():
             'elevation': sta_elev,
             'depth': 0.0,
             'sample_rate': sps}
-    
-    
     
         n=-1
         ques=f"Enter channel names, comma separated ({chans}) :"
