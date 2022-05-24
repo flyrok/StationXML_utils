@@ -37,6 +37,7 @@ def parse_staxml(inv,outformat):
                 end_date=chan.end_date
                 hang=chan._azimuth
                 vang=chan._dip
+
                 if outformat == 'binder':
                     lond,lonm,lonv,latd,latm,latv=dec2ddmm(lon,lat) 
                     stainfo.append({'net':net_code,'sta':sta_code,
@@ -76,7 +77,7 @@ def write_file(stainfo,output,outformat):
     print('writing file')
     msgs=[]
     msgs2=[]
-    if outformat == 'cvs':
+    if outformat == 'csv':
         for i in stainfo:
             sta=i['sta']
             net=i['net']
@@ -84,7 +85,7 @@ def write_file(stainfo,output,outformat):
             lat=i['lat']
             lon=i['lon']
             elev=i['elev']
-            msgs.append(f"{sta:<5s},{net:<2s},{chan:<4s},{lat:9.5f},{lon:10.5f}{elev:6.1f}\n")
+            msgs.append(f"{sta:<5s},{net:<2s},{chan:<4s},{lat:9.5f},{lon:10.5f},{elev:6.1f}\n")
 
     if outformat == 'nll':
         stalist=[]
