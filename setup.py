@@ -52,6 +52,7 @@ setup(
             'staxml2geojson=stationxml_utils.staxml2geojson:main',
             'update_staxml=stationxml_utils.update_staxml:main',
             'dump_staxml2txt=stationxml_utils.dump_staxml2txt:main',
+            'merge_staxmls=stationxml_utils.merge_staxmls:main',
         ],
     },
     extras_require={  # Optional
